@@ -17,10 +17,15 @@
         <%= kindOfDay %>
     </h1>
     <ul>
-        <li>Buy Food</li>
-        <li>Eat food</li>
-        <li>Cook Food</li>
 
+
+
+
+        <% for(var i=0;i<newListItems.length;i++){ %>
+            <li>
+                <%= newListItems[i]%>
+            </li>
+            <% }%>
     </ul>
     <form action="/" method="post">
         <input type="text" name="newItem">
