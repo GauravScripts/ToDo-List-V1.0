@@ -1,63 +1,40 @@
 //jshint esversion:6
-const express = require("express");
-const bodyParser = require("body-parser");
-const app = express();
-var item ="";
+var express = require("express");
+var bodyParser = require("body-parser");
+var app = express();
+var items =[];
+var workItems = [];
+var item = "";
 app.set('view engine', 'ejs');
-
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.get("/", function (req, res) {
-  var today = new Date();
-  var day = "";
-/*   if(today.getDay()===6||today.getDay()===0){
-    day="Weekend";
-  }
-  else{
-   day = "Weekday";
-  } 
-  switch (today.getDay()) {
-    case 0:
-      day = "Sunday";
-      break;
-    case 1:
-      day = "Monday";
-      break;
-    case 2:
-      day = "Tuesday";
-      break;
-    case 3:
-      day = "Wednesday";
-      break;
-    case 4:
-      day = "Thursday";
-      break;
-    case 5:
-      day = "Friday";
-      break;
-    case 6:
-      day = "Saturday";
-      break;
-    default:
-      console.log("Error: current day is equal to: " + today.getDay());
-    }
-    */
-   var options = {
-      weekday: "long",
-      day: "numeric",
-      month: "long"
-    };
-    var day = today.toLocaleDateString("en-US", options);
-   
+    var day = "";
+  
+    res.render("list", { listTitle: day, newListItems: items });
+    //post request for the list
+});
+app.post("/", function (req, res) {
+  var item = req.body.newItem;
 
-    res.render("list",{kindOfDay:day,newItem:item});
+   if(res.body.list==="Work"){
+        workItems.push(item);
+        res.redirect("/work");
     
-   
-  });
-  app.post("/", function (req, res) {
-    var item = req.body.newItem;
-    res.redirect("/");
-  });
-
+  } else {
+      items.push(item);
+      res.redirect("/");
+    
+   }
+});
+app.get("/work",function(req,res){  
+    res.render("list",{listTitle:"Work List",newListItems:items});
+});
+app.post("/work",function(req,res){
+  let item = req.body.newItem;
+  items.push(item);
+  res.redirect("/work");
+});
 app.listen(3000, function () {
-  console.log("We are listening on port 3000");
+    console.log("We are listening on port 3000");
 });
